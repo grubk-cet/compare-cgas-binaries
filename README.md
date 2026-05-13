@@ -263,14 +263,3 @@ Create a file with **zero bytes of content** whose **filename** encodes the orde
 9. Else if `model.SplashGuardType == SplashNose`: append `"-SN"`.
 
 Create the file with that exact name, **write nothing to it** (0 bytes), and close it.
-
----
-
-### Implementation requirements
-
-- Implement this as a function (or set of functions) triggered by the Generate button in the web app.
-- Mirror the exact function decomposition from the desktop: one function per file type, one orchestrating function.
-- Track `filledFileCount` and `blankFileCount` during generation and surface both counts in the completion feedback to the user (matching the desktop's "X filled files and Y blank files generated" message).
-- **Do not touch any existing web-app code** outside of: (a) the new generate functions, (b) the Generate button's click handler, and (c) any new imports those functions require.
-- All binary data must be assembled using `DataView` / `Uint8Array` or equivalent, respecting little-endian byte order throughout.
-- The output (10 `.bin` files + 1 zero-byte label file = 11 files total) must be delivered to the user for download — use the same mechanism the web app already uses for file output (ZIP download, File System Access API, etc.). If no such mechanism exists yet, use the [File System Access API](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API) `showDirectoryPicker()` so the user can select an output folder, matching the desktop's "Output Files" folder concept.
