@@ -2,40 +2,39 @@ import os
 import filecmp
 from pathlib import Path
 
+
+# replace whatever is in the desktop/webapp files
+
 def compare_folders(dir1, dir2):
-    # Convert to Path objects for easier handling
     path1 = Path(dir1)
     path2 = Path(dir2)
 
-    # 1. Check if both directories exist
     if not path1.is_dir() or not path2.is_dir():
         return "Error: One or both paths are not valid directories."
 
-    # 2. Get all .bin files in both folders
-    files1 = sorted([f.name for f in path1.glob("*.bin")])
-    files2 = sorted([f.name for f in path2.glob("*.bin")])
-
-    # 3. Compare filenames first
+    files1 = sorted([f.name for f in path1.glob("*")])
+    files2 = sorted([f.name for f in path2.glob("*")])
+    
+    # print diffs
     if files1 != files2:
-        return f"Not Identical: Filename lists do not match.\nFolder A: {files1}\nFolder B: {files2}"
+        diffFiles1 = sorted([f.name for f in path1.glob("*") if f.name not in files2])
+        diffFiles2 = sorted([f.name for f in path2.glob("*") if f.name not in files1])
+        return f"Not Identical: Filename lists do not match.\nDiffs:\ndirectory 1: {diffFiles1}.\ndirectory 2: {diffFiles2}"
 
-    # 4. Compare file contents
     mismatched = []
     for filename in files1:
         file_a = path1 / filename
         file_b = path2 / filename
 
-        # shallow=False ensures we compare the actual bits, not just metadata
         if not filecmp.cmp(file_a, file_b, shallow=False):
             mismatched.append(filename)
 
-    # 5. Final Verdict
     if not mismatched:
-        return "Identical: All .bin filenames and contents match perfectly."
+        return "Identical: All filenames and contents match perfectly."
     else:
         return f"Not Identical: The following files have different contents: {mismatched}"
 
-# --- Example Usage ---
+# change these to whatever
 folder_a = "./webapp"
 folder_b = "./desktop"
 
