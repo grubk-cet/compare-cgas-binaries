@@ -55,10 +55,7 @@ def compare_folders(dir1, dir2):
         for filename, diff_lines in mismatched.items():
             result += f"\n{'='*40}\nDifferences in: {filename}\n{'='*40}\n"
             
-            # Print the diff (capped at 50 lines to prevent flooding the console on huge files)
-            result += "".join(diff_lines[:50])
-            if len(diff_lines) > 50:
-                result += f"\n... and {len(diff_lines) - 50} more lines of differences.\n"
+            result += "".join(diff_lines)
                 
         return result
 
@@ -68,3 +65,8 @@ folder_b = "./desktop"
 
 result = compare_folders(folder_a, folder_b)
 print(result)
+
+output_path = "diff_output.txt"
+with open(output_path, 'w', encoding='utf-8') as f:
+    f.write(result)
+print(f"\nDiff written to {output_path}")
